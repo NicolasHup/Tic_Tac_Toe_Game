@@ -62,6 +62,12 @@ button{
   border-radius: 5px;
 }
 
+button:hover{
+  background:  linear-gradient(135deg, #9b59b6, #71b7e6);
+  transform: rotate(360deg);
+  transform: scale(1.01);
+}
+
 div.reset-button{
   display: grid;
   justify-content: center;
@@ -70,7 +76,7 @@ div.reset-button{
 }
 
 button#reset{
-  height: 40px;
+  height: 50px;
   width: 100px;
   color: #fff;
   border: none;
