@@ -6,8 +6,8 @@
 body{
   display: flex;
   height: 100vh;
-  font-family: 'Anton', sans-serif;
-  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #0c0c0c, #242222);
   color: #333;   
 }
 
@@ -63,6 +63,7 @@ button{
 }
 
 button:hover{
+  cursor: pointer;
   background:  linear-gradient(135deg, #9b59b6, #71b7e6);
   transform: rotate(360deg);
   transform: scale(1.01);
@@ -76,8 +77,8 @@ div.reset-button{
 }
 
 button#reset{
-  height: 50px;
-  width: 100px;
+  height: 45px;
+  width: 180px;
   color: #fff;
   border: none;
   border-radius: 5px;
