@@ -1,12 +1,13 @@
-let btnOption = document.querySelectorAll(".btn-grey");
+// Create  Array to store the gameboard data
 
+let btnOption = document.querySelectorAll(".btn-grey");
 
 //playetr "x" plays first
 let xTurn = true;
-let count = 0;
-//Display X/O onclick
 
-btnOption.forEach((element) =>{
+//Add event listner to Display X/O onclick
+
+btnOption.forEach((element, index) =>{
     element.addEventListener("click", () =>{
         if(xTurn){
             xTurn = false;
@@ -17,5 +18,7 @@ btnOption.forEach((element) =>{
             //Display O
             element.innerText = "O"
         }
+
+        console.log(index)
     })
 })
