@@ -30,22 +30,46 @@ btnOption.forEach((element, index) =>{
             element.innerText = "O"
         }*/
 
-        placeMaker(index)
+        placeMarker(index)
     })
 })
 
 // Create function that makes sure button does not change maker once it was pressed initially
 
-function placeMaker(index){
+function placeMarker(index){
     //Determine row and colmn from index
     let col = index % 3
     let row = (index - col)/3
   //Check if the current cell is empty
   if(boardData[row][col] == 0){
-        boardData[row][col] = player;
+        boardData[row][col] = player; 
      //Change player
         player *= -1;
 
-        console.log(boardData)
+        addMarkers()
     }   
 }
+
+
+// Craete a function for placing player markers
+
+function addMarkers(){
+    //Iterate over rows 
+    for(let row = 0; row < 3; row++){
+        //Iterate over colmns
+        for(let col = 0; col < 3; col++){
+            //Check if it is player1s marker
+            if(boardData[row][col] == 1){
+                //update cells to add x marker
+                btnOption[(row * 3) + col].innerText = "X";
+            }else if(boardData[row][col] == -1){
+                //Update cell if it O marker
+                btnOption[(row * 3) + col].innerText = "O";
+            }
+        }
+    }
+}
+
+
+
+
