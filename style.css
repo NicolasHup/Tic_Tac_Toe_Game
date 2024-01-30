@@ -69,14 +69,14 @@ button:hover{
   transform: scale(1.01);
 }
 
-div.reset-button{
+div.n-button{
   display: grid;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
 }
 
-button#reset{
+.start-game-button, .clear-board-button{
   height: 45px;
   width: 180px;
   color: #fff;
