@@ -1,122 +1,170 @@
-// Create  Array to store the gameboard data
-let boardData =[
-    [0,0,0],
-    [0,0,0],
-    [0,0,0]
-]
 
-//Define game variables 
+// Setting up the factory function 
+let createPlayer = () => {
+    
+    // Loop through two times to capture the players first name, and auto assign their player number and 
+    for (let i = 0; i<4; i++){
 
-let player =1
-let gameOver = false;
-//Pull in cells from DOM
+        if (gameBoardModule.playerArray.length >= 6){
+            gameBoardModule.makePlayerMove();
+            break;
 
-let btnOption = document.querySelectorAll(".btn-grey");
+        } else if (gameBoardModule.playerArray.length == 0) {
+            let playerName = prompt("Player 1 enter your name:")
 
-//playetr "x" plays first
-let xTurn = true;
-
-//Add event listner to Display X/O onclick
-
-btnOption.forEach((element, index) =>{
-    element.addEventListener("click", () =>{
-        /*if(xTurn){
-            xTurn = false;
-            //display x
-            element.innerText = "X"
-        } else {
-            xTurn =true;
-            //Display O
-            element.innerText = "O"
-        }*/
-
-        placeMarker(index)
-    })
-})
-
-// Create function that makes sure button does not change maker once it was pressed initially
-
-function placeMarker(index){
-    //Determine row and colmn from index
-    let col = index % 3
-    let row = (index - col)/3
-  //Check if the current cell is empty
-  if(boardData[row][col] == 0 && gameOver ==false){
-        boardData[row][col] = player; 
-     //Change player
-        player *= -1;
-        addMarkers();
-        checkResult();
-    }   
-}
-
-
-// Craete a function for placing player markers
-
-function addMarkers(){
-    //Iterate over rows 
-    for(let row = 0; row < 3; row++){
-        //Iterate over colmns
-        for(let col = 0; col < 3; col++){
-            //Check if it is player1s marker
-            if(boardData[row][col] == 1){
-                //update cells to add x marker
-                btnOption[(row * 3) + col].innerText = "X";
-            } else if(boardData[row][col] == -1){
-                //Update cell if it O marker
-                btnOption[(row * 3) + col].innerText = "O";
+            if (playerName == "" || playerName == null) {
+                alert("Sorry, name cannot be blank!");
+                continue;
             }
+
+            let playerNumber = 1;
+            let assignedXO = "X";
+            alert("You are player 1, and your assigned letter is X!");
+            gameBoardModule.playerArray.push(playerName, playerNumber, assignedXO);
+            console.log("Show me the contents of the playerArray....", gameBoardModule.playerArray);
+            //return{pllayerName, playerNumber, assignedXO}
+
+        } else if (gameBoardModule.playerArray.length !== 0){
+            let playerName = prompt("Player 2 enter your name:");
+
+            if (playerName == "" || playerName == null){
+                alert("Sorry, name cannot be blank");
+                continue;
+            }
+
+            let playerNumber = 2;
+            let assignedXO = "O";
+            alert("You are player 2, and your assigned letter is O");
+            gameBoardModule.playerArray.push(playerName, playerNumber, assignedXO);
+            console.log("Show me the contents of the playerArray....", gameBoardModule.playerArray)
+
         }
     }
-}
+};
 
-function checkResult(){
-    //check rows and columns 
-    for(let i = 0; i < 3; i++){
-        let rowSum = boardData[i][0] + boardData[i][1] + boardData[i][2];
-        let colSum = boardData[0][i] + boardData[1][i] + boardData[2][i];
-        if(rowSum == 3 || colSum == 3){
-            //player1 wins
-            endGame(1);
-            return //we stop where we are ...we have met the condition we need
-        } else if(rowSum == -3 || colSum == -3){
-             //player2 wins
-            endGame(2)
-            return //we stop where we are ...we have met the condition we need
+// Setting up the gameboard module 
+let gameBoardModule = (function() {
+    let gameBoard = [];
+    let playerArray= [];
+
+    // Publicly exposed function to envoke next player move
+    let makePlayerMove = () => {
+
+        // Checks for two player submission and gameboard array dosen't spill over gridboxes 
+        if (playerArray.length == 6 && gameBoard.length < 9){
+
+            // Controls for player move 
+            if (gameBoard.length == 0){
+                alert("Player 1, please make your move!");
+                gameBoard.push(playerArray[2]);
+                console.log("Show me the current gameBoard array...", gameBoard);
+
+            } else if (gameBoard[gameBoard.length - 1 ] == "X"){
+                alert("Player 2 please make your move!");
+                gameBoard.push(playerArray[5]);
+                console.log("Show me the current gameBoard Array...", gameBoard);
+
+            } else if (gameBoard[gameBoard.length - 1] == "O"){
+                alert("Player 1, please make your move");
+                gameBoard.push(playerArray[2]);
+                console.log("Show me the current gameBoard Array...", gameBoard);
+            }
+        }; 
+    } 
+
+    return {gameBoard, playerArray, makePlayerMove};
+})();
+
+// Setting up the displayController module
+let displayControllerModule = (function() {
+    const makeMove = document.querySelectorAll(".game-board-button")
+
+    // Start indexing and looping through each button node
+    let index = 0;
+    makeMove.forEach(makeMoves =>{
+        makeMoves.dataset.linkedButton = index;
+        makeMoves.addEventListener("click", renderArrayToScreen);
+
+        function renderArrayToScreen() {
+            const gridBoxes = document.querySelectorAll(".grid-box ");
+
+            // Start indexing and looping Through each grid box node
+             let index = 0;
+             gridBoxes.forEach(gridBox => {
+                gridBox.dataset.linkedButton = index;
+
+                // Render clicked play on the correct grid box and display
+                if (gridBox.getAttribute("data-linked-Button") == makeMoves.getAttribute("data-linked-Button")) {
+                    gridBox.textContent = gameBoardModule.gameBoard[gameBoardModule.gameBoard.length - 1];
+                    console.log("Show me my makeMoves linked button value...", makeMoves.dataset.linkedButton);
+                    console.log("Show me my gridBox linked button value...", gridBox.dataset.linkedButton);
+                }
+            index++;   
+            })
+
+            // Run local function to check for win/disable gameboard from further play/display winnern on DOM
+            function checkWin(player){
+             
+                const horizontal = [0,3,6].map(i=>{return[i,i+1,i+2]});
+                const vertical = [0,1,2].map(i=>{return[i,i+3,i+6]});
+                const diagonal = [[0,4,8],[2,4,6]];
+
+                let allwins = [].concat(horizontal).concat(vertical).concat(diagonal);
+
+                let results = allwins.some(indices => {
+                    return gridBoxes[indices[0]].textContent == player && gridBoxes[indices[1]].textContent == player && gridBoxes[indices[2]].textContent == player
+                });
+                    return results;
+            }
+
+            if (checkWin ("X") == true){
+                console.log(gameBoardModule.playerArray[0], " Wins");
+                const body = document.querySelector(".n-button");
+                const playerWinMessage = document.createElement("h1");
+                playerWinMessage.textContent = (gameBoardModule.playerArray[0] + " Wins");
+                body.appendChild(playerWinMessage)
+                makeMove.forEach(makeMoves => {
+                    makeMoves.remove();
+                })
+                startGameButton.remove();
+                return;
+            } else if (checkWin ("O") == true){
+                console.log(gameBoardModule.playerArray[3], " Wins");
+                const body = document.querySelector(".n-button");
+                const playerWinMessage = document.createElement("h1");
+                playerWinMessage.textContent = (gameBoardModule.playerArray[3] + " Wins");
+                body.appendChild(playerWinMessage);
+                makeMove.forEach(makeMoves => {
+                    makeMoves.remove();
+                })
+                startGameButton.remove();
+                return;
+            } else if (gameBoardModule.gameBoard.length == 9){
+                console.log("Tie!");
+                const body = document.querySelector(".n-button");
+                const playerWinMessage = document.createElement("h1");
+                playerWinMessage.textContent = ("Tie!");
+                body.appendChild(playerWinMessage);
+                makeMove.forEach(makeMoves => {
+                    makeMoves.remove();
+                })
+                startGameButton.remove();
+                return;
+            }
+        gameBoardModule.makePlayerMove();    
         }
-    }
-    //Check diagonals
-    let diagonalSum1 = boardData[0][0] + boardData[1][1] + boardData[2][2];
-    let diagonalSum2 = boardData[0][2] + boardData[1][1] + boardData[2][0];
-    if(diagonalSum1 == 3 || diagonalSum2 == 3){
-        //player1 wins
-        endGame(1);
-        return //we stop where we are ...we have met the condition we need
-    } else if(diagonalSum1 == -3 || diagonalSum2 == -3){
-        //player2 wins
-        endGame(2);
-        return //we stop where we are ...we have met the condition we need
-    }
+    index++;
+    })
 
-    //Check for a tie
-    if(boardData[0].indexOf(0) == -1 &&
-        boardData[1].indexOf(0) == -1 &&
-        boardData[2].indexOf(0) == -1){
-        endGame(0);
-        return //we stop where we are ...we have met the condition we need
+    // Listen for click to start the game 
+    const startGameButton = document.querySelector(".start-game-button");
+    startGameButton.addEventListener("click", createPlayer);
+
+    // Listen for click to restart the game 
+    const clearBoard = document.querySelector(".clear-board-button");
+    clearBoard.addEventListener("click", clearBoar);
+    
+    function clearBoar(){
+        location.reload();
     }
-}
-
-
-//Function to end the game amd display results
-
-function endGame(winner){
-    // Trigger game over
-    gameOver = true;
-    //check if game ended in a tie 
-    if(winner == 0){
-        console.log("Tie")
-    } else {
-        console.log(`Player ${winner} wins!`)
-    }
-}
+})();
