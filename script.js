@@ -65,7 +65,7 @@ let gameBoardModule = (function() {
                 console.log("Show me the current gameBoard Array...", gameBoard);
 
             } else if (gameBoard[gameBoard.length - 1] == "O"){
-                alert("Player 1, please make your move");
+                alert("Player 1, please make your move!");
                 gameBoard.push(playerArray[2]);
                 console.log("Show me the current gameBoard Array...", gameBoard);
             }
@@ -120,8 +120,8 @@ let displayControllerModule = (function() {
             if (checkWin ("X") == true){
                 console.log(gameBoardModule.playerArray[0], " Wins");
                 const body = document.querySelector(".n-button");
-                const playerWinMessage = document.createElement("h1");
-                playerWinMessage.textContent = (gameBoardModule.playerArray[0] + " Wins");
+                const playerWinMessage = document.createElement("h3");
+                playerWinMessage.textContent = (gameBoardModule.playerArray[0] + " Wins!!");
                 body.appendChild(playerWinMessage)
                 makeMove.forEach(makeMoves => {
                     makeMoves.remove();
@@ -131,8 +131,8 @@ let displayControllerModule = (function() {
             } else if (checkWin ("O") == true){
                 console.log(gameBoardModule.playerArray[3], " Wins");
                 const body = document.querySelector(".n-button");
-                const playerWinMessage = document.createElement("h1");
-                playerWinMessage.textContent = (gameBoardModule.playerArray[3] + " Wins");
+                const playerWinMessage = document.createElement("h3");
+                playerWinMessage.textContent = (gameBoardModule.playerArray[3] + " Wins!!");
                 body.appendChild(playerWinMessage);
                 makeMove.forEach(makeMoves => {
                     makeMoves.remove();
@@ -142,8 +142,8 @@ let displayControllerModule = (function() {
             } else if (gameBoardModule.gameBoard.length == 9){
                 console.log("Tie!");
                 const body = document.querySelector(".n-button");
-                const playerWinMessage = document.createElement("h1");
-                playerWinMessage.textContent = ("Tie!");
+                const playerWinMessage = document.createElement("h3");
+                playerWinMessage.textContent = ("Tie!!");
                 body.appendChild(playerWinMessage);
                 makeMove.forEach(makeMoves => {
                     makeMoves.remove();
